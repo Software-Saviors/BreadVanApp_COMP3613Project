@@ -69,6 +69,19 @@ class Driver(User, Subject):
         db.session.add(new_drive)
         db.session.commit()
 
+        street = Street.query.get(streetId)
+        invalid_residents = []
+        if street:
+            for resident in street.residents:
+                if resident.streetId != streetId:
+                    invalid_residents.append(resident)
+            if invalid_residents:
+                f"Below are residents that should not have been subscribed to Driver {self.id}:"
+                for resident in invalid_residents:
+                    f"Resident {resident.id} on Street {resident.streetId}"
+                f"Please notify the admin to remove these residents from Driver {self.id}'s observers."
+                return None
+                    
         self.notify_observers(
             f"SCHEDULED>> Drive {new_drive.id} by Driver {self.id} on {date} at {time}"
         )
