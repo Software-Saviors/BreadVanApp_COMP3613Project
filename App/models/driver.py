@@ -92,12 +92,14 @@ class Driver(User):
         db.session.add(new_drive)
         db.session.commit()
 
-        # Notify observers
-        self.subject.notify_observers(
-            f"SCHEDULED>> Drive {new_drive.id} by Driver {self.id} on {date} at {time}"
-        )
+        # Notify ONLY subscribed residents
+        message = f"SCHEDULED>> Drive {new_drive.id} by Driver {self.id} on {date} at {time}"
+
+        for resident in self.subscribers:     
+            resident.update(message)
 
         return new_drive
+
 
     def cancel_drive(self, driveId):
         drive = Drive.query.get(driveId)

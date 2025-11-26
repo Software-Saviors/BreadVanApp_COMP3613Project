@@ -18,12 +18,6 @@ def driver_schedule_drive(driver, area_id, street_id, date_str, time_str):
         raise ValueError("Cannot schedule a drive more than 60 days in advance.")
     existing_drive = Drive.query.filter_by(areaId=area_id, streetId=street_id, date=date).first()
     new_drive = driver.schedule_drive(area_id, street_id, date_str, time_str)
-    observers = Resident.query.all()  
-
-    for obs in observers:           
-        obs.update(
-            f"Driver {driver.id} scheduled a new drive on {date_str} at {time_str}."
-        )
     return new_drive
     
 
