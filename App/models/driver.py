@@ -107,11 +107,17 @@ class Driver(User):
             drive.status = "Cancelled"
             db.session.commit()
 
-            self.subject.notify_observers(
-                f"CANCELLED: Drive {drive.id} by Driver {self.id} on {drive.date} at {drive.time}"
+            # Notify ONLY subscribed residents
+            message = (
+                f"CANCELLED: Drive {drive.id} by Driver {self.id} "
+                f"on {drive.date} at {drive.time}"
             )
 
-        return None
+            for resident in self.subscribers:
+                resident.update(message)
+            return True
+        
+        return False
 
     # -------------------------------------------------------
     # Drive interaction

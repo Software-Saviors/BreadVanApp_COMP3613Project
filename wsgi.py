@@ -542,7 +542,7 @@ def unsubscribe_from_driver_command(driver_username):
         print(f"⚠ {str(e)}")
 
 
-@resident_cli.command("view-subscriptions", help="View all drivers you are subscribed to")
+@resident_cli.command("view_subscriptions", help="View all drivers you are subscribed to")
 def view_subscriptions_command():
     resident = require_resident()
     if not resident:
