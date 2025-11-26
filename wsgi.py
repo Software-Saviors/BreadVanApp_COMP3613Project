@@ -33,7 +33,10 @@ from App.controllers.resident import (
     resident_request_stop,
     resident_cancel_stop,
     resident_view_inbox,
-    resident_view_driver_stats
+    resident_view_driver_stats,
+    resident_subscribe_to_driver,
+    resident_unsubscribe_from_driver,
+    resident_view_subscriptions
 )
 from App.controllers.user import (
     user_login,
@@ -511,6 +514,54 @@ def view_driver_stats_command(driver_id):
             print(f"Driver {driver.username} is currently on a drive at {street.name}, {area.name}")
     except ValueError as e:
         print(str(e))
+
+
+@resident_cli.command("subscribe", help="Subscribe to notifications from a driver")
+@click.argument("driver_id", type=int)
+def subscribe_to_driver_command(driver_id):
+    resident = require_resident()
+    if not resident:
+        return
+    try:
+        resident_subscribe_to_driver(resident, driver_id)
+        driver = Driver.query.get(driver_id)
+        print(f"✔ Successfully subscribed to driver '{driver.username}'. You will receive notifications about their drives.")
+    except ValueError as e:
+        print(f"⚠ {str(e)}")
+
+
+@resident_cli.command("unsubscribe", help="Unsubscribe from notifications from a driver")
+@click.argument("driver_id", type=int)
+def unsubscribe_from_driver_command(driver_id):
+    resident = require_resident()
+    if not resident:
+        return
+    try:
+        resident_unsubscribe_from_driver(resident, driver_id)
+        driver = Driver.query.get(driver_id)
+        print(f"✔ Successfully unsubscribed from driver '{driver.username}'.")
+    except ValueError as e:
+        print(f"⚠ {str(e)}")
+
+
+@resident_cli.command("view-subscriptions", help="View all drivers you are subscribed to")
+def view_subscriptions_command():
+    resident = require_resident()
+    if not resident:
+        return
+    
+    subscriptions = resident_view_subscriptions(resident)
+    if not subscriptions:
+        print("You are not subscribed to any drivers.")
+        return
+    
+    print("\nYour Driver Subscriptions:")
+    print("-" * 50)
+    print(f"{'Driver ID':<12} {'Username':<20} {'Status':<15}")
+    print("-" * 50)
+    for driver in subscriptions:
+        print(f"{driver.id:<12} {driver.username:<20} {driver.status:<15}")
+    print("\n")
 
 
 app.cli.add_command(resident_cli)
