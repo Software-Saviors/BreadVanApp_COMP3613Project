@@ -18,7 +18,10 @@ from App.controllers.admin import (
     admin_delete_area,
     admin_delete_street,
     admin_view_all_areas,
-    admin_view_all_streets
+    admin_view_all_streets,
+    admin_add_resident_to_subject,
+    admin_remove_resident_from_subject,
+    admin_view_subject_residents
 )
 from App.controllers.driver import (
     driver_schedule_drive,
@@ -289,6 +292,60 @@ def view_all_streets_command():
         print(f"{street.id}. {street.name} (Area ID: {street.areaId})")
     print("\n")
 
+@admin_cli.command("add_resident_to_driver", help="Add a resident as an observer to a driver")
+@click.argument("driver_id", type=int)
+@click.argument("resident_id", type=int)
+def add_resident_to_driver_command(driver_id, resident_id):
+    admin = require_admin()
+    if not admin:
+        return
+    driver = Driver.query.get(driver_id)
+    resident = Resident.query.get(resident_id)
+    if not driver:
+        print("Driver not found.")
+        return
+    if not resident:
+        print("Resident not found.")
+        return
+    admin_add_resident_to_subject(driver_id, resident_id)
+    print(f"Resident '{resident.username}' added as observer to Driver '{driver.username}'.")
+
+@admin_cli.command("remove_resident_from_driver", help="Remove a resident as an observer from a driver")
+@click.argument("driver_id", type=int)
+@click.argument("resident_id", type=int)
+def remove_resident_from_driver_command(driver_id, resident_id):
+    admin = require_admin()
+    if not admin:
+        return
+    driver = Driver.query.get(driver_id)
+    resident = Resident.query.get(resident_id)
+    if not driver:
+        print("Driver not found.")
+        return
+    if not resident:
+        print("Resident not found.")
+        return
+    admin_remove_resident_from_subject(driver_id, resident_id)
+    print(f"Resident '{resident.username}' removed as observer from Driver '{driver.username}'.")
+
+@admin_cli.command("view_driver_residents", help="View all residents observing a driver")
+@click.argument("driver_id", type=int)
+def view_driver_residents_command(driver_id):
+    admin = require_admin()
+    if not admin:
+        return
+    driver = Driver.query.get(driver_id)
+    if not driver:
+        print("Driver not found.")
+        return
+    residents = admin_view_subject_residents(driver_id)
+    if not residents:
+        print("No residents are observing this driver.")
+        return
+    print(f"\nResidents observing Driver '{driver.username}':")
+    for resident in residents:
+        print(f"- {resident.username} (ID: {resident.id})")
+    print("\n")
 
 app.cli.add_command(admin_cli)
 

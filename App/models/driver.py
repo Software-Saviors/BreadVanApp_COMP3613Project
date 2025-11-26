@@ -7,13 +7,14 @@ from App.models.subject import Subject
 
 
 
-class Driver(User):
+class Driver(User, Subject):
     __tablename__ = "driver"
 
     id = db.Column(db.Integer, db.ForeignKey('user.id'), primary_key=True)
     status = db.Column(db.String(20), nullable=False)
     areaId = db.Column(db.Integer, db.ForeignKey('area.id'), nullable=False)
     streetId = db.Column(db.Integer, db.ForeignKey('street.id'))
+    observers = db.relationship("Resident", secondary="driver_observers", backref="observed_drivers")
 
     area = db.relationship("Area", backref="drivers")
     street = db.relationship("Street", backref="drivers")
@@ -24,7 +25,6 @@ class Driver(User):
 
     def __init__(self, username, password, status, areaId, streetId):
         super().__init__(username, password)
-        self.subject = Subject()       # Compose Subject inside Driver
         self.status = status
         self.areaId = areaId
         self.streetId = streetId
@@ -127,3 +127,17 @@ class Driver(User):
         if drive:
             return drive.stops
         return None
+    
+    def add_observer(self, observer):
+        if observer not in self.observers:
+            self.observers.append(observer)
+            db.session.commit()
+
+    def remove_observer(self, observer):
+        if observer in self.observers:
+            self.observers.remove(observer)
+            db.session.commit()
+    
+    def notify_observers(self, message):
+        for observer in self.observers:
+            observer.update(message)
