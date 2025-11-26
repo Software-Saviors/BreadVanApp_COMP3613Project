@@ -517,28 +517,26 @@ def view_driver_stats_command(driver_id):
 
 
 @resident_cli.command("subscribe", help="Subscribe to notifications from a driver")
-@click.argument("driver_id", type=int)
-def subscribe_to_driver_command(driver_id):
+@click.argument("driver_username")
+def subscribe_to_driver_command(driver_username):
     resident = require_resident()
     if not resident:
         return
     try:
-        resident_subscribe_to_driver(resident, driver_id)
-        driver = Driver.query.get(driver_id)
+        driver = resident_subscribe_to_driver(resident, driver_username)
         print(f"✔ Successfully subscribed to driver '{driver.username}'. You will receive notifications about their drives.")
     except ValueError as e:
         print(f"⚠ {str(e)}")
 
 
 @resident_cli.command("unsubscribe", help="Unsubscribe from notifications from a driver")
-@click.argument("driver_id", type=int)
-def unsubscribe_from_driver_command(driver_id):
+@click.argument("driver_username")
+def unsubscribe_from_driver_command(driver_username):
     resident = require_resident()
     if not resident:
         return
     try:
-        resident_unsubscribe_from_driver(resident, driver_id)
-        driver = Driver.query.get(driver_id)
+        driver = resident_unsubscribe_from_driver(resident, driver_username)
         print(f"✔ Successfully unsubscribed from driver '{driver.username}'.")
     except ValueError as e:
         print(f"⚠ {str(e)}")

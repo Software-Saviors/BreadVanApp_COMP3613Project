@@ -41,13 +41,13 @@ def resident_view_stock(resident, driver_id):
     stocks =  DriverStock.query.filter_by(driverId=driver_id).all()
     return stocks
 
-def resident_subscribe_to_driver(resident, driver_id):
+def resident_subscribe_to_driver(resident, driver_username):
     """
     Subscribe a resident to a driver to receive notifications about their drives.
     """
-    driver = Driver.query.get(driver_id)
+    driver = Driver.query.filter_by(username=driver_username).first()
     if not driver:
-        raise ValueError("Driver not found.")
+        raise ValueError(f"Driver '{driver_username}' not found.")
     
     # Check if already subscribed
     if driver in resident.subscribed_drivers:
@@ -58,13 +58,13 @@ def resident_subscribe_to_driver(resident, driver_id):
     db.session.commit()
     return driver
 
-def resident_unsubscribe_from_driver(resident, driver_id):
+def resident_unsubscribe_from_driver(resident, driver_username):
     """
     Unsubscribe a resident from a driver's notifications.
     """
-    driver = Driver.query.get(driver_id)
+    driver = Driver.query.filter_by(username=driver_username).first()
     if not driver:
-        raise ValueError("Driver not found.")
+        raise ValueError(f"Driver '{driver_username}' not found.")
     
     # Check if subscribed
     if driver not in resident.subscribed_drivers:

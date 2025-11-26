@@ -69,11 +69,6 @@ class Driver(User):
         db.session.add(new_drive)
         db.session.commit()
 
-        street = Street.query.get(streetId)
-        if street:
-            for resident in street.residents:
-                self.subject.add_observer(resident)
-
         self.subject.notify_observers(
             f"SCHEDULED>> Drive {new_drive.id} by Driver {self.id} on {date} at {time}"
         )
@@ -85,13 +80,6 @@ class Driver(User):
         if drive:
             drive.status = "Cancelled"
             db.session.commit()
-
-            # Notify residents on the drive's street about the cancellation.
-            street = Street.query.get(drive.streetId or self.streetId)
-            if street:
-                for resident in street.residents:
-                    # ensure resident is registered as observer before notifying
-                    self.subject.add_observer(resident)
 
             self.subject.notify_observers(
                 f"CANCELLED: Drive {drive.id} by Driver {self.id} on {drive.date} at {drive.time}"
