@@ -1,10 +1,10 @@
 from App.database import db
 from datetime import datetime
+from sqlalchemy import orm
 from .user import User
 from .drive import Drive
 from .street import Street
 from App.models.subject import Subject
-
 
 
 class Driver(User):
@@ -22,13 +22,30 @@ class Driver(User):
         "polymorphic_identity": "Driver",
     }
 
+    # -------------------------------------------------------
+    # 1) Constructor when CREATING a new Driver
+    # -------------------------------------------------------
     def __init__(self, username, password, status, areaId, streetId):
         super().__init__(username, password)
-        self.subject = Subject()       # Compose Subject inside Driver
+        self.subject = Subject() 
         self.status = status
         self.areaId = areaId
         self.streetId = streetId
 
+    # -------------------------------------------------------
+    # 2) Reconstructor when SQLAlchemy LOADS a Driver
+    # -------------------------------------------------------
+    @orm.reconstructor
+    def init_on_load(self):
+        """
+        Ensures self.subject ALWAYS exists,
+        even when the object is loaded from the DB.
+        """
+        self.subject = Subject()
+
+    # -------------------------------------------------------
+    # JSON
+    # -------------------------------------------------------
     def get_json(self):
         user_json = super().get_json()
         user_json['status'] = self.status
@@ -36,6 +53,9 @@ class Driver(User):
         user_json['streetId'] = self.streetId
         return user_json
 
+    # -------------------------------------------------------
+    # Login / logout
+    # -------------------------------------------------------
     def login(self, password):
         if super().login(password):
             self.areaId = 0
@@ -50,6 +70,9 @@ class Driver(User):
         self.status = "Offline"
         db.session.commit()
 
+    # -------------------------------------------------------
+    # Drive scheduling + notifications
+    # -------------------------------------------------------
     def schedule_drive(self, areaId, streetId, date_str, time_str):
         try:
             date = datetime.strptime(date_str, "%Y-%m-%d").date()
@@ -69,6 +92,7 @@ class Driver(User):
         db.session.add(new_drive)
         db.session.commit()
 
+        # Notify observers
         self.subject.notify_observers(
             f"SCHEDULED>> Drive {new_drive.id} by Driver {self.id} on {date} at {time}"
         )
@@ -87,6 +111,9 @@ class Driver(User):
 
         return None
 
+    # -------------------------------------------------------
+    # Drive interaction
+    # -------------------------------------------------------
     def view_drives(self):
         return Drive.query.filter_by(driverId=self.id).all()
 
