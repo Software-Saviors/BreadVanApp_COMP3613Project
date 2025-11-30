@@ -92,3 +92,12 @@ def unsubscribe(driver_username):
     except ValueError as e:
         return jsonify({"error": {"code": "resource_not_found", "message": str(e)}}), 404
     return "", 204
+
+@bp.get("/subscrptions")
+@jwt_required()
+@role_required("resident")
+def view_subscriptions():
+    uid = current_user_id
+    drivers = resident_controller.resident_view_subscriptions(uid)
+    subscriptions = [d.get_json() if hasattr(d, "get_json") else d for d in drivers]
+    return jsonify({"subscriptions": subscriptions}), 200
