@@ -65,3 +65,19 @@ def driver_stats():
     uid = current_user_id()
     stats = resident_controller.resident_view_driver_stats(uid, street_id, from_date, to_date)
     return jsonify({"stats": stats}), 200
+
+@bp.post("/subscrptions")
+@jwt_required()
+@role_required("resident")
+def subscribe():
+    data = request.get_json or {}
+    driver_username = data(driver_username)
+    if not driver_username:
+        return jsonify({"error": {"code": "validation_error", "message": "drive_username required"}}), 422
+    uid = current_user_id()
+    try:
+        driver = resident_controller.resident_subscribe_to_driver(uid, driver_username)
+    except ValueError as e:
+        return jsonify({"error": {"code": "validation_error", "message": str(e)}}), 400
+
+    return jsonify({"subscribed_to": driver.username}), 201
