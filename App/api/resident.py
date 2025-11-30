@@ -81,3 +81,14 @@ def subscribe():
         return jsonify({"error": {"code": "validation_error", "message": str(e)}}), 400
 
     return jsonify({"subscribed_to": driver.username}), 201
+
+@bp.delete("/subscriptions/<string:driver_username>")
+@jwt_required()
+@role_required("resident")
+def unsubscribe(driver_username):
+    uid = current_user_id()
+    try:
+        resident_controller.resident_unsubscribe_from_driver(uid, driver_username)
+    except ValueError as e:
+        return jsonify({"error": {"code": "resource_not_found", "message": str(e)}}), 404
+    return "", 204
