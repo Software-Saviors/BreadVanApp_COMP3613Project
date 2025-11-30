@@ -66,21 +66,21 @@ def driver_stats():
     stats = resident_controller.resident_view_driver_stats(uid, street_id, from_date, to_date)
     return jsonify({"stats": stats}), 200
 
-@bp.post("/subscrptions")
+@bp.post("/subscriptions")
 @jwt_required()
 @role_required("resident")
 def subscribe():
-    data = request.get_json or {}
-    driver_username = data(driver_username)
+    data = request.get_json() or {}
+    driver_username = data.get("driver_username")
     if not driver_username:
-        return jsonify({"error": {"code": "validation_error", "message": "drive_username required"}}), 422
+        return jsonify({"error": {"code": "validation_error", "message": "driver_username required"}}), 422
     uid = current_user_id()
     try:
         driver = resident_controller.resident_subscribe_to_driver(uid, driver_username)
     except ValueError as e:
         return jsonify({"error": {"code": "validation_error", "message": str(e)}}), 400
-
-    return jsonify({"subscribed_to": driver.username}), 201
+    out = driver.get_json() if hasattr(driver, "get_json") else driver
+    return jsonify(out), 201
 
 @bp.delete("/subscriptions/<string:driver_username>")
 @jwt_required()
@@ -93,11 +93,11 @@ def unsubscribe(driver_username):
         return jsonify({"error": {"code": "resource_not_found", "message": str(e)}}), 404
     return "", 204
 
-@bp.get("/subscrptions")
+@bp.get("/subscriptions")
 @jwt_required()
 @role_required("resident")
 def view_subscriptions():
-    uid = current_user_id
+    uid = current_user_id()
     drivers = resident_controller.resident_view_subscriptions(uid)
     subscriptions = [d.get_json() if hasattr(d, "get_json") else d for d in drivers]
     return jsonify({"subscriptions": subscriptions}), 200
