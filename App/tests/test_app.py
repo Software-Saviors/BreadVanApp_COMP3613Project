@@ -71,6 +71,12 @@ class ResidentUnitTests(unittest.TestCase):
         assert resident.inbox[1].endswith("msg2")
         assert resident.inbox[0].startswith("[")
         assert resident.inbox[1].startswith("[")
+
+    def test_update_notif(self):
+        resident = Resident("john", "johnpass", 1, 2, 123)
+        resident.update("New msg")
+        assert resident.inbox[-1].endswith("New msg")
+        assert resident.inbox[-1].startswith("[")
         
 class DriverUnitTests(unittest.TestCase):
 
