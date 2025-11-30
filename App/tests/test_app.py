@@ -77,6 +77,12 @@ class ResidentUnitTests(unittest.TestCase):
         resident.update("New msg")
         assert resident.inbox[-1].endswith("New msg")
         assert resident.inbox[-1].startswith("[")
+
+    def test_subscribe_to_driver(self):
+        resident = Resident("john", "johnpass", 1, 2, 123)
+        driver = Driver("steve", "stevepass", "Busy", 2, 12)
+        resident.subscribe_to_driver(driver)
+        assert driver in resident.subscribed_drivers
         
 class DriverUnitTests(unittest.TestCase):
 
