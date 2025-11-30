@@ -83,6 +83,14 @@ class ResidentUnitTests(unittest.TestCase):
         driver = Driver("steve", "stevepass", "Busy", 2, 12)
         resident.subscribe_to_driver(driver)
         assert driver in resident.subscribed_drivers
+
+    def test_unsubscribe_to_driver(self):
+        resident = Resident("john", "johnpass", 1, 2, 123)
+        driver = Driver("steve", "stevepass", "Busy", 2, 12)
+        resident.subscribe_to_driver(driver)
+        assert driver in resident.subscribed_drivers
+        resident.unsubscribe_from_driver(driver)
+        assert driver not in resident.subscribed_drivers
         
 class DriverUnitTests(unittest.TestCase):
 
