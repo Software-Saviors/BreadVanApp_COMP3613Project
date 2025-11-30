@@ -270,6 +270,10 @@ class ResidentsIntegrationTests(unittest.TestCase):
         stock = resident_view_stock(self.resident, self.driver.id)
         self.assertIsNotNone(stock)
 
+    def test_view_subscriptions(self):
+        subscriptions = resident_view_subscriptions(self.resident)
+        self.assertIsNotNone(subscriptions)
+        self.assertIsInstance(subscriptions, list)
 
 class DriversIntegrationTests(unittest.TestCase):
                 
