@@ -761,6 +761,42 @@
 					"response": []
 				},
 				{
+					"name": "View Subscriptions",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/resident/subscriptions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"resident",
+								"subscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Unsubscribe to Driver",
 					"request": {
 						"method": "DELETE",
