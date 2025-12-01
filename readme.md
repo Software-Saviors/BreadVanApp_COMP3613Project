@@ -161,6 +161,20 @@ flask resident view_inbox
 flask resident view_driver_stats <driver_id>
 ```
 
+### Subscribe to Driver
+```bash
+flask resident subscribe <driver_id>
+```
+
+### Unsubscribe to Driver
+```bash
+flask resident unsubscribe <driver_id>
+```
+
+### View Subscriptions
+```bash
+flask resident view_subscriptions
+```
 
 ## 🔑 Role Requirements
 * flask admin ... → must be logged in as Admin
