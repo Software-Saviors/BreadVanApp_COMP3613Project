@@ -85,5 +85,6 @@ def initialize():
     driver2.schedule_drive(area1.id, street12.id, "2025-10-26", "10:00")
     db.session.commit()
                      
-    resident2.request_stop(0)
+    resident2.request_stop(1)
+    resident3.request_stop(1)
     db.session.commit()
