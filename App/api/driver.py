@@ -105,3 +105,12 @@ def requested_stops(drive_id):
     stops = driver_controller.driver_view_requested_stops(uid, drive_id)
     items = [s.get_json() if hasattr(s, "get_json") else s for s in (stops or [])]
     return jsonify({"items": items}), 200
+
+@bp.get("/drives/<int:drive_id>/stock")
+@jwt_required()
+@role_required("driver")
+def check_stock(drive_id):
+    uid = current_user_id()
+    stock = driver_controller.driver_view_stock(uid, drive_id)
+    items = [s.get_json() if hasattr(s, "get_json") else s for s in (stock or [])]
+    return jsonify({"items": items}), 200
