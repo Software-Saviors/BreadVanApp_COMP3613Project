@@ -1,0 +1,977 @@
+{
+	"info": {
+		"_postman_id": "24a466cf-1d18-4061-b0c4-3ff26b0cf2a8",
+		"name": "BreadVanApp API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42343108"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login (Forms POST)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Returned Access Token\", function () {",
+									"    var jsonData = pm.response.json();",
+									"    if (jsonData['access_token']) {",
+									"        pm.collectionVariables.set('access_token', jsonData['access_token']);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "admin",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Identify Page",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/identify",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"identify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\": \"admin\", \"password\": \"pass\"}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Identify",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/identify",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"identify"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Logout",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/logout",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "API Signup",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\": \"newuser\", \"password\": \"pass\", \"role\": \"resident\", \"area_id\": 1, \"street_id\": 1, \"house_number\": 10}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Auth Signup (alt path)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\": \"newuser2\", \"password\": \"pass\"}"
+						},
+						"url": {
+							"raw": "{{base_url}}/auth/signup",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "List Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Driver",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"driver1\",\"password\":\"pass\"}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/drivers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"drivers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Driver",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/drivers/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"drivers",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Resident",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"res1\",\"password\":\"pass\",\"area_id\":1,\"street_id\":1,\"house_number\":10}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/residents",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"residents"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Area",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"Arima\"}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/areas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"areas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Area",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/areas/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"areas",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Street",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"name\":\"Main Street\",\"area_id\":1}"
+						},
+						"url": {
+							"raw": "{{base_url}}/admin/streets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"streets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Street",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/streets/1/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"streets",
+								"1",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Areas",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/areas",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"areas"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Streets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/admin/streets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"admin",
+								"streets"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Driver",
+			"item": [
+				{
+					"name": "Driver Me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/driver/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"driver",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List My Drives",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/driver/drives",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"driver",
+								"drives"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Drive",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"area_id\":1,\"street_id\":1,\"date\":\"2025-01-01\",\"time\":\"08:00\"}"
+						},
+						"url": {
+							"raw": "{{base_url}}/driver/drives",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"driver",
+								"drives"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Start Drive",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/driver/drives/1/start",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"driver",
+								"drives",
+								"1",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "End Drive",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/driver/drives/1/end",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"driver",
+								"drives",
+								"1",
+								"end"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Drive",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/driver/drives/1/cancel",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"driver",
+								"drives",
+								"1",
+								"cancel"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Requested Stops",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/driver/drives/1/requested-stops",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"driver",
+								"drives",
+								"1",
+								"requested-stops"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Resident",
+			"item": [
+				{
+					"name": "Resident Me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/resident/me",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"resident",
+								"me"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Request Stop",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"drive_id\":1}"
+						},
+						"url": {
+							"raw": "{{base_url}}/resident/stops",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"resident",
+								"stops"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Stop",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/resident/stops/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"resident",
+								"stops",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Inbox",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/resident/inbox",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"resident",
+								"inbox"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Driver Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/resident/driver-stats?driver_id=1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"resident",
+								"driver-stats"
+							],
+							"query": [
+								{
+									"key": "driver_id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "View Driver Stock",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/resident/driver-stock/{{driver_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"resident",
+								"driver-stock",
+								"{{driver_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Subscribe to Driver",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"driver_username\": \"bob\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/resident/subscriptions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"resident",
+								"subscriptions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unsubscribe to Driver",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"driver_username\": \"bob\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/resident/subscriptions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"resident",
+								"subscriptions"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Index",
+			"item": [
+				{
+					"name": "Index HTML",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init DB",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/init",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"init"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Users Page (HTML)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (Form)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "user1"
+								},
+								{
+									"key": "password",
+									"value": "pass"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Users JSON",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (JSON API)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\"username\":\"user2\",\"password\":\"pass\"}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://breadvanapp-comp3613project.onrender.com"
+		},
+		{
+			"key": "access_token",
+			"value": ""
+		}
+	]
+}
