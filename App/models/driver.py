@@ -5,6 +5,8 @@ from .user import User
 from .drive import Drive
 from .street import Street
 from App.models.subject import Subject
+from App.models.driver_stock import DriverStock
+from App.models.item import Item
 
 
 class Driver(User):
@@ -150,3 +152,17 @@ class Driver(User):
         if drive:
             return drive.stops
         return None
+    
+
+    def update_stock(driver,  item_id, quantity):
+        item =  Item.query.get(item_id)
+        if not item:
+            raise ValueError("Invalid item ID.")
+        stock =  DriverStock.query.filter_by(driverId=driver.id, itemId=item_id).first()
+        if stock:
+         stock.quantity = quantity
+        else:
+            stock = DriverStock(driverId=driver.id, itemId=item_id, quantity=quantity)
+        db.session.add(stock)
+        db.session.commit()
+        return stock

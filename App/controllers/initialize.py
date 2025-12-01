@@ -1,6 +1,6 @@
 from App.database import db
 from App.models import Admin, Driver, Resident, Area, Street, Item
-
+from App.controllers.driver import driver_update_stock
 
 def initialize():
     db.drop_all()
@@ -76,8 +76,9 @@ def initialize():
     db.session.commit()
     
     #Updating Driver Stock
-    driver1.driver_update_stock(driver1,1,20)
-    driver2.driver_update_stock(driver2,2,15)
+    
+    driver1.update_stock(item1.id,20)
+    driver2.update_stock(item2.id,15)
     db.session.commit()
 
     #Creating Drives and Stops

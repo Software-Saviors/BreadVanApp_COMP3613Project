@@ -130,6 +130,6 @@ def view_driver_stock(driver_id):
     except ValueError as e:
         return jsonify({'error': {'code': 'not_found', 'message': str(e)}}), 404
 
-    items = [{'id': s.id, 'name': s.name, 'quantity': s.quantity} for s in stocks]
+    items = [{'id': s.id, 'name': s.item.name, 'quantity': s.quantity} for s in stocks]
 
     return jsonify({'items': items}), 200
