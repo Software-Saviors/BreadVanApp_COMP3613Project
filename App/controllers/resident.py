@@ -29,10 +29,10 @@ def resident_view_inbox(resident):
     return resident.view_inbox()
 
 def resident_view_driver_stats(resident, driver_id):
-    driver = resident.view_driver_stats(driver_id)
-    if not driver:
-        raise ValueError("Driver not found.")
-    return driver
+        driver = Driver.query.get(driver_id)
+        if driver:
+            return driver.status 
+        return None
 
 def resident_view_stock(resident, driver_id):
     driver = resident.view_driver_stats(driver_id)
