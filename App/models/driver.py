@@ -1,8 +1,12 @@
 from App.database import db
 from datetime import datetime
+from sqlalchemy import orm
 from .user import User
 from .drive import Drive
 from .street import Street
+from App.models.subject import Subject
+from App.models.driver_stock import DriverStock
+from App.models.item import Item
 
 
 class Driver(User):
@@ -20,12 +24,30 @@ class Driver(User):
         "polymorphic_identity": "Driver",
     }
 
+    # -------------------------------------------------------
+    # 1) Constructor when CREATING a new Driver
+    # -------------------------------------------------------
     def __init__(self, username, password, status, areaId, streetId):
         super().__init__(username, password)
+        self.subject = Subject() 
         self.status = status
         self.areaId = areaId
         self.streetId = streetId
 
+    # -------------------------------------------------------
+    # 2) Reconstructor when SQLAlchemy LOADS a Driver
+    # -------------------------------------------------------
+    @orm.reconstructor
+    def init_on_load(self):
+        """
+        Ensures self.subject ALWAYS exists,
+        even when the object is loaded from the DB.
+        """
+        self.subject = Subject()
+
+    # -------------------------------------------------------
+    # JSON
+    # -------------------------------------------------------
     def get_json(self):
         user_json = super().get_json()
         user_json['status'] = self.status
@@ -33,6 +55,9 @@ class Driver(User):
         user_json['streetId'] = self.streetId
         return user_json
 
+    # -------------------------------------------------------
+    # Login / logout
+    # -------------------------------------------------------
     def login(self, password):
         if super().login(password):
             self.areaId = 0
@@ -47,33 +72,36 @@ class Driver(User):
         self.status = "Offline"
         db.session.commit()
 
+    # -------------------------------------------------------
+    # Drive scheduling + notifications
+    # -------------------------------------------------------
     def schedule_drive(self, areaId, streetId, date_str, time_str):
         try:
             date = datetime.strptime(date_str, "%Y-%m-%d").date()
             time = datetime.strptime(time_str, "%H:%M").time()
         except Exception:
-            print(
-                "Invalid date or time format. Please use YYYY-MM-DD for date and HH:MM for time."
-            )
+            print("Invalid date or time format.")
             return
 
-        new_drive = Drive(driverId=self.id,
-                          areaId=areaId,
-                          streetId=streetId,
-                          date=date,
-                          time=time,
-                          status="Upcoming")
+        new_drive = Drive(
+            driverId=self.id,
+            areaId=areaId,
+            streetId=streetId,
+            date=date,
+            time=time,
+            status="Upcoming"
+        )
         db.session.add(new_drive)
         db.session.commit()
 
-        street = Street.query.get(streetId)
-        if street:
-            for resident in street.residents:
-                resident.receive_notif(
-                    f"SCHEDULED>> Drive {new_drive.id} by Driver {self.id} on {date} at {time}"
-                )
-            db.session.commit()
-        return (new_drive)
+        # Notify ONLY subscribed residents
+        message = f"SCHEDULED>> Drive {new_drive.id} by Driver {self.id} on {date} at {time}"
+
+        for resident in self.subscribers:     
+            resident.update(message)
+
+        return new_drive
+
 
     def cancel_drive(self, driveId):
         drive = Drive.query.get(driveId)
@@ -81,17 +109,21 @@ class Driver(User):
             drive.status = "Cancelled"
             db.session.commit()
 
-            street = None
-            if self.streetId is not None:
-                street = Street.query.get(self.streetId)
-            if street:
-                for resident in street.residents:
-                    resident.receive_notif(
-                        f"CANCELLED: Drive {drive.id} by {self.id} on {drive.date} at {drive.time}"
-                    )
-                db.session.commit()
-        return None
+            # Notify ONLY subscribed residents
+            message = (
+                f"CANCELLED: Drive {drive.id} by Driver {self.id} "
+                f"on {drive.date} at {drive.time}"
+            )
 
+            for resident in self.subscribers:
+                resident.update(message)
+            return True
+        
+        return False
+
+    # -------------------------------------------------------
+    # Drive interaction
+    # -------------------------------------------------------
     def view_drives(self):
         return Drive.query.filter_by(driverId=self.id).all()
 
@@ -120,3 +152,17 @@ class Driver(User):
         if drive:
             return drive.stops
         return None
+    
+
+    def update_stock(driver,  item_id, quantity):
+        item =  Item.query.get(item_id)
+        if not item:
+            raise ValueError("Invalid item ID.")
+        stock =  DriverStock.query.filter_by(driverId=driver.id, itemId=item_id).first()
+        if stock:
+         stock.quantity = quantity
+        else:
+            stock = DriverStock(driverId=driver.id, itemId=item_id, quantity=quantity)
+        db.session.add(stock)
+        db.session.commit()
+        return stock

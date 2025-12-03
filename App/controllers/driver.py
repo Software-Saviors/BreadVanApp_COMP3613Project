@@ -1,4 +1,4 @@
-from App.models import Driver, Drive, Street, Item, DriverStock
+from App.models import Driver, Drive, Street, Item, DriverStock, Resident
 from App.database import db
 from datetime import datetime, timedelta
 
@@ -19,6 +19,7 @@ def driver_schedule_drive(driver, area_id, street_id, date_str, time_str):
     existing_drive = Drive.query.filter_by(areaId=area_id, streetId=street_id, date=date).first()
     new_drive = driver.schedule_drive(area_id, street_id, date_str, time_str)
     return new_drive
+    
 
 def driver_cancel_drive(driver, drive_id):
     return driver.cancel_drive(drive_id)

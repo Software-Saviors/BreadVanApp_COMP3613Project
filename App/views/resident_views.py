@@ -67,3 +67,69 @@ def driver_stats():
     except ValueError as e:
         return jsonify({'error': {'code': 'not_found', 'message': str(e)}}), 404
     return jsonify({'stats': stats}), 200
+
+@resident_views.route('/resident/subscriptions', methods=['POST'])
+@jwt_required()
+@role_required('Resident')
+def subscribe_driver():
+    uid = current_user_id()
+    resident = user_controller.get_user(uid)
+    
+    data = request.get_json() or {}
+    driver_username = data.get('driver_username')
+    if not driver_username:
+        return jsonify({'error': {'code': 'validation_error', 'message': 'driver_username is required'}}), 422
+    
+    try:
+        driver = resident_controller.resident_subscribe_to_driver(resident, driver_username)
+    except ValueError as e:
+        return jsonify({'error': {'code': 'not_found', 'message': str(e)}}), 404
+    
+    return jsonify({'message': f'Subscribed to driver {driver.username}', 'driver_id': driver.id}), 201
+
+@resident_views.route('/resident/subscriptions', methods=['DELETE'])
+@jwt_required()
+@role_required('Resident')
+def unsubscribe_driver():
+    uid = current_user_id()
+    resident = user_controller.get_user(uid)
+    
+    data = request.get_json() or {}
+    driver_username = data.get('driver_username')
+    if not driver_username:
+        return jsonify({'error': {'code': 'validation_error', 'message': 'driver_username is required'}}), 422
+    
+    try:
+        driver = resident_controller.resident_unsubscribe_from_driver(resident, driver_username)
+    except ValueError as e:
+        return jsonify({'error': {'code': 'not_found', 'message': str(e)}}), 404
+    
+    return jsonify({'message': f'Unsubscribed from driver {driver.username}', 'driver_id': driver.id}), 200
+
+@resident_views.route('/resident/subscriptions', methods=['GET'])
+@jwt_required()
+@role_required('Resident')
+def view_subscriptions():
+    uid = current_user_id()
+    resident = user_controller.get_user(uid)
+    
+    subscriptions = resident_controller.resident_view_subscriptions(resident)
+    items = [{'id': d.id, 'username': d.username} for d in subscriptions]
+    
+    return jsonify({'items': items}), 200
+
+@resident_views.route('/resident/driver-stock/<int:driver_id>', methods=['GET'])
+@jwt_required()
+@role_required('Resident')
+def view_driver_stock(driver_id):
+    uid = current_user_id()
+    resident = user_controller.get_user(uid)
+
+    try:
+        stocks = resident_controller.resident_view_stock(resident, driver_id)
+    except ValueError as e:
+        return jsonify({'error': {'code': 'not_found', 'message': str(e)}}), 404
+
+    items = [{'id': s.id, 'name': s.item.name, 'quantity': s.quantity} for s in stocks]
+
+    return jsonify({'items': items}), 200

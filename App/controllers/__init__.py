@@ -18,7 +18,10 @@ from .resident import (
     resident_cancel_stop,
     resident_view_driver_stats,
     resident_view_stock,
-    resident_view_inbox
+    resident_view_inbox,
+    resident_subscribe_to_driver,
+    resident_unsubscribe_from_driver,
+    resident_view_subscriptions
 )
 
 from .driver import (
@@ -54,7 +57,8 @@ __all__ = [
 
     # resident
     "resident_create", "resident_request_stop", "resident_cancel_stop",
-    "resident_view_driver_stats", "resident_view_stock", "resident_view_inbox",
+    "resident_view_driver_stats", "resident_view_stock", "resident_view_inbox", "resident_subscribe_to_driver",
+    "resident_unsubscribe_from_driver", "resident_view_subscriptions",
 
     # driver
     "driver_schedule_drive", "driver_cancel_drive", "driver_view_drives",

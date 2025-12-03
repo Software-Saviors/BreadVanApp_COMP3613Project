@@ -1,6 +1,6 @@
 from App.database import db
-from App.models import Admin, Driver, Resident, Area, Street
-
+from App.models import Admin, Driver, Resident, Area, Street, Item
+from App.controllers.driver import driver_update_stock
 
 def initialize():
     db.drop_all()
@@ -10,7 +10,14 @@ def initialize():
     admin = Admin(username="admin", password="adminpass")
     db.session.add(admin)
     db.session.commit()
-
+    
+    #Creating Items
+    item1 = Item(name="Hops Bread", price=10.00, description="Is Bread",tags="White Bread")
+    item2 = Item(name="Whole Wheat Bread", price=12.00, description="Is Healthy Bread",tags="Whole Wheat")
+    db.session.add(item1)
+    db.session.add(item2)
+    db.session.commit()
+    
     #Creating Areas and Streets
     area1 = Area(name='St. Augustine')
     db.session.add(area1)
@@ -67,10 +74,17 @@ def initialize():
                          houseNumber=13)
     db.session.add_all([resident1, resident2, resident3])
     db.session.commit()
+    
+    #Updating Driver Stock
+    
+    driver1.update_stock(item1.id,20)
+    driver2.update_stock(item2.id,15)
+    db.session.commit()
 
     #Creating Drives and Stops
     driver2.schedule_drive(area1.id, street12.id, "2025-10-26", "10:00")
     db.session.commit()
                      
-    resident2.request_stop(0)
+    resident2.request_stop(1)
+    resident3.request_stop(1)
     db.session.commit()
