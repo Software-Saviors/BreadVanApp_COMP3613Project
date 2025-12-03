@@ -7,6 +7,62 @@
 	},
 	"item": [
 		{
+			"name": "Initialize",
+			"item": [
+				{
+					"name": "Index HTML",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Init DB",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/init",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"init"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Health",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Auth",
 			"item": [
 				{
@@ -824,62 +880,6 @@
 							"path": [
 								"resident",
 								"subscriptions"
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "Index",
-			"item": [
-				{
-					"name": "Index HTML",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Init DB",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/init",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"init"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Health",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{base_url}}/health",
-							"host": [
-								"{{base_url}}"
-							],
-							"path": [
-								"health"
 							]
 						}
 					},
